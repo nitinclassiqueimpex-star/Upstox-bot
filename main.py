@@ -11,12 +11,14 @@ CHAT_ID = os.environ.get("CHAT_ID")
 
 def send_msg(text):
     if not BOT_TOKEN or not CHAT_ID:
+        print("TOKEN/CHAT_ID missing")
         return
     url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
     try:
-        requests.post(url, data={"chat_id": CHAT_ID, "text": text}, timeout=10)
-    except:
-        pass
+        r = requests.post(url, json={"chat_id": CHAT_ID, "text": text})
+        print(f"Telegram Response: {r.text}")
+    except Exception as e:
+        print(f"Error: {e}")
 
 @app.route('/')
 def home():
@@ -24,10 +26,11 @@ def home():
 
 def start():
     time.sleep(5)
-    send_msg("✅ Nitin bhai, aapka bot GitHub se Render par Live ho gaya!")
+    print("Bot Starting...")
+    send_msg("✅ Nitin bhai, aapka bot Live ho gaya!")
 
 threading.Thread(target=start).start()
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
-    app.run(host="0.0.0.0", port=port)
+    app.run(host='0.0.0.0', port=port)
